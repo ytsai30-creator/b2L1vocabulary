@@ -7,133 +7,49 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root {
-            --primary: #4A90E2;
-            --secondary: #F5A623;
-            --success: #7ED321;
-            --danger: #FF5E5E;
-            --bg: #F0F4F8;
-            --card-bg: #FFFFFF;
+            --primary: #4A90E2; --secondary: #F5A623; --success: #7ED321; --danger: #FF5E5E; --bg: #F0F4F8;
         }
-
         * { touch-action: manipulation; box-sizing: border-box; }
-
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background-color: var(--bg);
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            overflow-x: hidden;
+            font-family: -apple-system, sans-serif; background-color: var(--bg); margin: 0;
+            display: flex; flex-direction: column; align-items: center; min-height: 100vh;
         }
-
         nav {
-            width: 100%;
-            background: white;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            padding: 12px 5px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            width: 100%; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex; justify-content: center; gap: 8px; padding: 12px 5px; position: sticky; top: 0; z-index: 100;
         }
-
         .nav-btn {
-            flex: 1;
-            max-width: 100px;
-            padding: 10px 0;
-            border-radius: 12px;
-            border: 2px solid var(--primary);
-            background: transparent;
-            color: var(--primary);
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 0.9rem;
+            flex: 1; max-width: 100px; padding: 10px 0; border-radius: 12px; border: 2px solid var(--primary);
+            background: transparent; color: var(--primary); font-weight: bold; font-size: 0.9rem;
         }
-
         .nav-btn.active { background: var(--primary); color: white; }
-
-        .container {
-            width: 95%;
-            max-width: 450px;
-            margin-top: 20px;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            padding-bottom: 30px;
-        }
-
+        .container { width: 95%; max-width: 450px; margin-top: 20px; display: none; flex-direction: column; align-items: center; padding-bottom: 30px; }
         .container.active { display: flex; }
-
         .card {
-            background: var(--card-bg);
-            width: 100%;
-            border-radius: 20px;
-            padding: 25px 20px;
-            box-shadow: 0 8px 15px rgba(0,0,0,0.05);
-            text-align: center;
-            margin-bottom: 20px;
-            min-height: 280px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+            background: white; width: 100%; border-radius: 20px; padding: 25px 20px;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.05); text-align: center; margin-bottom: 20px;
+            min-height: 280px; display: flex; flex-direction: column; justify-content: center;
         }
-
-        .word { font-size: 2.2rem; color: var(--primary); font-weight: bold; margin-bottom: 8px; word-wrap: break-word; }
-        .pos { color: #888; font-style: italic; margin-bottom: 15px; font-size: 1rem; }
-        .def-ch { font-size: 1.25rem; color: #222; font-weight: 500; border-top: 1px solid #eee; padding-top: 15px; line-height: 1.5; }
-
+        .word { font-size: 2.2rem; color: var(--primary); font-weight: bold; margin-bottom: 8px; }
+        .pos { color: #888; font-style: italic; margin-bottom: 15px; }
+        .def-ch { font-size: 1.25rem; color: #222; font-weight: 500; border-top: 1px solid #eee; padding-top: 15px; }
         .btn-group { display: flex; flex-direction: column; gap: 10px; width: 100%; }
-        
-        button {
-            min-height: 50px;
-            border: none;
-            border-radius: 15px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.1s;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        button:active { transform: scale(0.96); }
-
+        button { min-height: 55px; border: none; border-radius: 15px; font-size: 1.1rem; font-weight: bold; cursor: pointer; }
         .btn-speak { background: var(--secondary); color: white; }
         .btn-practice { background: var(--primary); color: white; }
         .btn-next { background: #333; color: white; }
-
-        #match-grid { 
-            display: grid; 
-            grid-template-columns: 1fr 1fr; 
-            gap: 10px; 
-            width: 100%; 
-        }
-
+        #match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; }
         .match-item {
-            background: white;
-            padding: 12px 8px;
-            border-radius: 12px;
-            text-align: center;
-            border: 2px solid transparent;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.05);
-            min-height: 75px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.95rem;
-            line-height: 1.3;
+            background: white; padding: 12px 8px; border-radius: 12px; text-align: center;
+            border: 2px solid transparent; box-shadow: 0 3px 6px rgba(0,0,0,0.05);
+            min-height: 75px; display: flex; align-items: center; justify-content: center; font-size: 0.95rem;
         }
-
         .match-item.selected { border-color: var(--primary); background: #E1F0FF; }
-        .match-item.correct { background: #E8F5E9; color: #BBB; border-color: transparent; }
+        .match-item.correct { background: #E8F5E9; color: #BBB; }
         .match-item.wrong { background: #FFEBEE; border-color: var(--danger); }
-        
-        .feedback { margin-top: 15px; min-height: 35px; font-weight: bold; font-size: 1.2rem; text-align: center; }
-        #timer, #match-timer { font-size: 1.3rem; font-weight: bold; color: var(--danger); margin-bottom: 10px; }
+        .feedback { margin-top: 15px; min-height: 50px; font-weight: bold; font-size: 1.1rem; text-align: center; line-height: 1.4; }
+        .score-val { color: var(--success); font-size: 1.4rem; }
+        .wrong-text { color: var(--danger); font-size: 0.9rem; display: block; margin-top: 5px; }
     </style>
 </head>
 <body>
@@ -148,16 +64,16 @@
         <div class="card" id="learn-card"></div>
         <div class="btn-group">
             <button class="btn-speak" onclick="handleSpeak()">🔊 Listen (聽)</button>
-            <button class="btn-practice" onclick="handlePractice()">🎤 Practice (練習)</button>
+            <button class="btn-practice" id="learn-rec-btn" onclick="handlePractice()">🎤 Practice (點擊開始練習)</button>
             <div id="learn-feedback" class="feedback"></div>
             <button class="btn-next" onclick="nextLearnWord()">Next 單字 →</button>
         </div>
-        <p id="progress-text" style="margin-top:15px; color:#999; font-size: 0.9rem;"></p>
+        <p id="progress-text" style="margin-top:15px; color:#999; font-size: 0.8rem;"></p>
     </div>
 
     <div id="game" class="container">
         <div style="font-weight:bold; margin-bottom:5px;">Score: <span id="current-score">0</span></div>
-        <div id="timer">Time Left: <span id="seconds">60</span>s</div>
+        <div id="timer" style="color:red; font-weight:bold; font-size:1.2rem;">Time Left: <span id="seconds">60</span>s</div>
         <div class="card">
             <div id="game-word" class="word" style="font-size: 2.5rem;">READY?</div>
             <div id="game-feedback" class="feedback"></div>
@@ -166,7 +82,7 @@
     </div>
 
     <div id="match" class="container">
-        <div id="match-timer">Time: <span id="match-seconds">0</span>s</div>
+        <div style="font-weight:bold; margin-bottom:10px;">Time: <span id="match-seconds">0</span>s</div>
         <div id="match-grid"></div>
         <button onclick="startMatchGame()" style="background: var(--primary); color: white; margin-top: 20px; width: 100%;">New Match</button>
     </div>
@@ -185,23 +101,25 @@
             { word: "unique", pos: "adj.", def_ch: "獨特的" },
             { word: "attitude", pos: "n.[C]", def_ch: "態度, 看法" },
             { word: "guide", pos: "n.[C] / vt.", def_ch: "導遊 / 指引, 領路" },
-            { word: "jam", pos: "vt. / n.[C]", def_ch: "使擠滿 / 堵塞, 擁擠" },
+            { word: "jam", pos: "vt. / n.[C]", def_ch: "使擠滿 / 堵塞" },
             { word: "tunnel", pos: "n.[C]", def_ch: "隧道, 地道" },
-            { word: "drip", pos: "vi. / n.[C]", def_ch: "滴下 / 水滴, 滴液" },
+            { word: "drip", pos: "vi. / n.[C]", def_ch: "滴下 / 水滴" },
             { word: "propose", pos: "vt.", def_ch: "提議, 建議" },
-            { word: "proposal", pos: "n.[C]", def_ch: "提案, 計畫" },
+            { word: "proposal", n: "n.[C]", def_ch: "提案, 計畫" },
             { word: "mile", pos: "n.[C]", def_ch: "英里" },
             { word: "construction", pos: "n.[U]", def_ch: "建設, 建造" },
             { word: "construct", pos: "vt.", def_ch: "建造, 構築" },
             { word: "accept", pos: "vt.", def_ch: "接受" },
             { word: "acceptable", pos: "adj.", def_ch: "可以接受的" },
             { word: "horn", pos: "n.[C]", def_ch: "(車輛的)喇叭" },
-            { word: "track", pos: "n.[C] / vt.", def_ch: "鐵軌 / 追蹤, 跟蹤" }
+            { word: "track", pos: "n.[C] / vt.", def_ch: "鐵軌 / 追蹤" }
         ];
 
         let currentIdx = 0;
-        const speech = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-        speech.lang = 'en-US';
+        const Speech = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const rec = new Speech();
+        rec.lang = 'en-US';
+        rec.interimResults = false;
 
         function showPage(id) {
             document.querySelectorAll('.container').forEach(c => c.classList.remove('active'));
@@ -210,17 +128,14 @@
             document.getElementById('btn-'+id).classList.add('active');
             if(id === 'learn') updateLearn();
             if(id === 'match') startMatchGame();
+            if(id !== 'game') { gameActive = false; rec.stop(); }
         }
 
-        function triggerConfetti() {
-            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-        }
-
-        // Learn
+        // --- Learn 邏輯 ---
         function updateLearn() {
             const d = vocabulary[currentIdx];
             document.getElementById('learn-card').innerHTML = `<div class="word">${d.word}</div><div class="pos">${d.pos}</div><div class="def-ch">${d.def_ch}</div>`;
-            document.getElementById('learn-feedback').innerText = "";
+            document.getElementById('learn-feedback').innerHTML = "";
             document.getElementById('progress-text').innerText = `${currentIdx + 1} / ${vocabulary.length}`;
         }
         function nextLearnWord() { currentIdx = (currentIdx + 1) % vocabulary.length; updateLearn(); }
@@ -230,53 +145,71 @@
         }
         function handlePractice() {
             const fb = document.getElementById('learn-feedback');
-            fb.innerText = "Listening... 🎤"; fb.style.color = "var(--primary)";
-            speech.start();
-            speech.onresult = (e) => {
-                const t = e.results[0][0].transcript.toLowerCase();
-                if(t.includes(vocabulary[currentIdx].word.toLowerCase())) {
-                    fb.innerText = "Great job! ✨"; fb.style.color = "var(--success)";
+            fb.innerHTML = "Listening... 🎤"; fb.style.color = "var(--primary)";
+            rec.start();
+            rec.onresult = (e) => {
+                const result = e.results[0][0];
+                const text = result.transcript.toLowerCase();
+                const target = vocabulary[currentIdx].word.toLowerCase();
+                const score = Math.round(result.confidence * 100);
+
+                if(text.includes(target)) {
+                    fb.innerHTML = `Great job! <span class="score-val">${score}分</span>`;
+                    fb.style.color = "var(--success)";
+                    confetti({ particleCount: 50, spread: 40, origin: { y: 0.8 } });
                 } else {
-                    fb.innerText = "Try again! ❌"; fb.style.color = "var(--danger)";
+                    fb.innerHTML = `Try again! <span class="score-val">${score}分</span><span class="wrong-text">你說的是: "${text}"</span>`;
+                    fb.style.color = "var(--danger)";
                 }
             };
         }
 
-        // Game
-        let score = 0, timeLeft = 60, active = false, gWord = "";
+        // --- Game 邏輯 ---
+        let gameScore = 0, timeLeft = 60, gameActive = false, gWord = "";
         function startGame() {
-            score = 0; timeLeft = 60; active = true;
-            document.getElementById('current-score').innerText = score;
+            gameScore = 0; timeLeft = 60; gameActive = true;
+            document.getElementById('current-score').innerText = gameScore;
             document.getElementById('start-btn').style.display = 'none';
+            document.getElementById('game-feedback').innerText = "Speak the word!";
             const timer = setInterval(() => {
                 timeLeft--; document.getElementById('seconds').innerText = timeLeft;
-                if(timeLeft <= 0) { clearInterval(timer); endG(); }
+                if(timeLeft <= 0 || !gameActive) { clearInterval(timer); if(timeLeft<=0) endG(); }
             }, 1000);
             nextG();
         }
         function nextG() {
-            if(!active) return;
+            if(!gameActive) return;
             gWord = vocabulary[Math.floor(Math.random()*vocabulary.length)].word;
             document.getElementById('game-word').innerText = gWord;
-            speech.start();
-            speech.onresult = (e) => {
-                if(e.results[0][0].transcript.toLowerCase().includes(gWord.toLowerCase())) {
-                    score += 10; document.getElementById('current-score').innerText = score;
-                    nextG();
-                } else { setTimeout(() => { if(active) speech.start(); }, 500); }
+            rec.start();
+            rec.onresult = (e) => {
+                const text = e.results[0][0].transcript.toLowerCase();
+                if(text.includes(gWord.toLowerCase())) {
+                    gameScore += 10;
+                    document.getElementById('current-score').innerText = gameScore;
+                    document.getElementById('game-feedback').innerText = "Correct! ✨";
+                    document.getElementById('game-feedback').style.color = "var(--success)";
+                    confetti({ particleCount: 30, spread: 50, origin: { y: 0.7 } });
+                    setTimeout(() => { if(gameActive) nextG(); }, 500);
+                } else {
+                    document.getElementById('game-feedback').innerText = `Keep trying! (You said: ${text})`;
+                    document.getElementById('game-feedback').style.color = "var(--danger)";
+                    setTimeout(() => { if(gameActive) rec.start(); }, 400);
+                }
             };
+            rec.onend = () => { if(gameActive && document.getElementById('game-feedback').innerText === "Speak the word!") rec.start(); };
         }
         function endG() {
-            active = false; document.getElementById('start-btn').style.display = 'block';
-            triggerConfetti();
-            setTimeout(() => alert(`挑戰結束！總分：${score}`), 500);
+            gameActive = false; document.getElementById('start-btn').style.display = 'block';
+            document.getElementById('game-word').innerText = "FINISH!";
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+            alert(`時間到！最終得分：${gameScore}`);
         }
 
-        // Match
+        // --- Match 邏輯 ---
         let mTimer, mSecs = 0, sel = null, mFound = 0;
         function startMatchGame() {
             clearInterval(mTimer); mSecs = 0; mFound = 0; sel = null;
-            document.getElementById('match-seconds').innerText = "0";
             mTimer = setInterval(() => { mSecs++; document.getElementById('match-seconds').innerText = mSecs; }, 1000);
             const sub = [...vocabulary].sort(() => 0.5 - Math.random()).slice(0, 5);
             let items = [];
@@ -298,7 +231,7 @@
                         if(sel.i.id === i.id && sel.i.type !== i.type) {
                             d.classList.add('correct'); sel.d.classList.add('correct');
                             sel.d.classList.remove('selected'); mFound++; sel = null;
-                            if(mFound === 5) { clearInterval(mTimer); triggerConfetti(); setTimeout(() => alert(`完成！花了 ${mSecs} 秒`), 500); }
+                            if(mFound === 5) { clearInterval(mTimer); confetti({particleCount:150, spread:70}); setTimeout(() => alert(`完成！花了 ${mSecs} 秒`), 500); }
                         } else {
                             d.classList.add('wrong'); sel.d.classList.add('wrong');
                             setTimeout(() => { d.classList.remove('wrong', 'selected'); sel.d.classList.remove('wrong', 'selected'); sel = null; }, 500);
