@@ -47,8 +47,7 @@
         .match-item.selected { border-color: var(--primary); background: #E1F0FF; }
         .match-item.correct { background: #E8F5E9; color: #BBB; }
         .match-item.wrong { background: #FFEBEE; border-color: var(--danger); }
-        .feedback { margin-top: 15px; min-height: 60px; font-weight: bold; font-size: 1.1rem; text-align: center; line-height: 1.4; }
-        .score-val { color: var(--success); font-size: 1.4rem; display: block; }
+        .feedback { margin-top: 15px; min-height: 60px; font-weight: bold; font-size: 1.2rem; text-align: center; line-height: 1.4; }
         .wrong-text { color: var(--danger); font-size: 0.9rem; display: block; margin-top: 5px; font-weight: normal; }
     </style>
 </head>
@@ -89,30 +88,30 @@
 
     <script>
         const vocabulary = [
-            { word: "transportation", pos: "n.[U]", def_ch: "交通運輸(系統)" },
-            { word: "transport", pos: "vt.", def_ch: "運輸, 運送" },
-            { word: "project", pos: "n.[C]", def_ch: "專案, 計畫" },
-            { word: "subway", pos: "n.[C]", def_ch: "地鐵" },
-            { word: "system", pos: "n.[C]", def_ch: "系統, 制度" },
-            { word: "explore", pos: "vt.", def_ch: "探索, 勘探" },
-            { word: "exploration", pos: "n.[C]", def_ch: "探索, 探究" },
-            { word: "century", pos: "n.[C]", def_ch: "世紀" },
-            { word: "trace", pos: "vt. / n.[C]", def_ch: "追溯 / 蹤跡, 痕跡" },
-            { word: "unique", pos: "adj.", def_ch: "獨特的" },
-            { word: "attitude", pos: "n.[C]", def_ch: "態度, 看法" },
-            { word: "guide", pos: "n.[C] / vt.", def_ch: "導遊 / 指引, 領路" },
-            { word: "jam", pos: "vt. / n.[C]", def_ch: "使擠滿 / 堵塞" },
-            { word: "tunnel", pos: "n.[C]", def_ch: "隧道, 地道" },
-            { word: "drip", pos: "vi. / n.[C]", def_ch: "滴下 / 水滴" },
-            { word: "propose", pos: "vt.", def_ch: "提議, 建議" },
-            { word: "proposal", pos: "n.[C]", def_ch: "提案, 計畫" },
-            { word: "mile", pos: "n.[C]", def_ch: "英里" },
-            { word: "construction", pos: "n.[U]", def_ch: "建設, 建造" },
-            { word: "construct", pos: "vt.", def_ch: "建造, 構築" },
-            { word: "accept", pos: "vt.", def_ch: "接受" },
-            { word: "acceptable", pos: "adj.", def_ch: "可以接受的" },
-            { word: "horn", pos: "n.[C]", def_ch: "(車輛的)喇叭" },
-            { word: "track", pos: "n.[C] / vt.", def_ch: "鐵軌 / 追蹤" }
+            { word: "transportation", pos: "n.[U]", def_ch: "交通運輸(系統) [cite: 13]" },
+            { word: "transport", pos: "vt.", def_ch: "運輸, 運送 [cite: 16]" },
+            { word: "project", pos: "n.[C]", def_ch: "專案, 計畫 [cite: 18]" },
+            { word: "subway", pos: "n.[C]", def_ch: "地鐵 [cite: 22]" },
+            { word: "system", pos: "n.[C]", def_ch: "系統, 制度 [cite: 25, 27]" },
+            { word: "explore", pos: "vt.", def_ch: "探索, 勘探 [cite: 46]" },
+            { word: "exploration", pos: "n.[C]", def_ch: "探索, 探究 [cite: 51]" },
+            { word: "century", pos: "n.[C]", def_ch: "世紀 [cite: 54]" },
+            { word: "trace", pos: "vt. / n.[C]", def_ch: "追溯 / 蹤跡, 痕跡 [cite: 57, 62]" },
+            { word: "unique", pos: "adj.", def_ch: "獨特的 [cite: 65]" },
+            { word: "attitude", pos: "n.[C]", def_ch: "態度, 看法 " },
+            { word: "guide", pos: "n.[C] / vt.", def_ch: "導遊 / 指引, 領路 " },
+            { word: "jam", pos: "vt. / n.[C]", def_ch: "使擠滿 / 堵塞 " },
+            { word: "tunnel", pos: "n.[C]", def_ch: "隧道, 地道 " },
+            { word: "drip", pos: "vi. / n.[C]", def_ch: "滴下 / 水滴 " },
+            { word: "propose", pos: "vt.", def_ch: "提議, 建議 [cite: 86]" },
+            { word: "proposal", pos: "n.[C]", def_ch: "提案, 計畫 [cite: 90]" },
+            { word: "mile", pos: "n.[C]", def_ch: "英里 [cite: 93]" },
+            { word: "construction", pos: "n.[U]", def_ch: "建設, 建造 [cite: 95]" },
+            { word: "construct", pos: "vt.", def_ch: "建造, 構築 [cite: 99]" },
+            { word: "accept", pos: "vt.", def_ch: "接受 [cite: 102]" },
+            { word: "acceptable", pos: "adj.", def_ch: "可以接受的 [cite: 106]" },
+            { word: "horn", pos: "n.[C]", def_ch: "(車輛的)喇叭 [cite: 109]" },
+            { word: "track", pos: "n.[C] / vt.", def_ch: "鐵軌 / 追蹤 [cite: 116, 120]" }
         ];
 
         let currentIdx = 0;
@@ -148,15 +147,12 @@
             fb.innerHTML = "Listening... 🎤"; fb.style.color = "var(--primary)";
             rec.start();
             rec.onresult = (e) => {
-                const result = e.results[0][0];
-                const text = result.transcript.toLowerCase();
+                const text = e.results[0][0].transcript.toLowerCase();
                 const target = vocabulary[currentIdx].word.toLowerCase();
-                const score = Math.round(result.confidence * 100);
                 if(text.includes(target)) {
-                    fb.innerHTML = `Great job! <span class="score-val">${score}分</span>`;
-                    fb.style.color = "var(--success)";
+                    fb.innerHTML = `Great job! ✨`; fb.style.color = "var(--success)";
                 } else {
-                    fb.innerHTML = `Try again! <span class="score-val">${score}分</span><span class="wrong-text">你說的是: "${text}"</span>`;
+                    fb.innerHTML = `Try again! ❌<span class="wrong-text">你說的是: "${text}"</span>`;
                     fb.style.color = "var(--danger)";
                 }
             };
