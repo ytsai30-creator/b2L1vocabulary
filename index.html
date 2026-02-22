@@ -47,9 +47,9 @@
         .match-item.selected { border-color: var(--primary); background: #E1F0FF; }
         .match-item.correct { background: #E8F5E9; color: #BBB; }
         .match-item.wrong { background: #FFEBEE; border-color: var(--danger); }
-        .feedback { margin-top: 15px; min-height: 50px; font-weight: bold; font-size: 1.1rem; text-align: center; line-height: 1.4; }
-        .score-val { color: var(--success); font-size: 1.4rem; }
-        .wrong-text { color: var(--danger); font-size: 0.9rem; display: block; margin-top: 5px; }
+        .feedback { margin-top: 15px; min-height: 60px; font-weight: bold; font-size: 1.1rem; text-align: center; line-height: 1.4; }
+        .score-val { color: var(--success); font-size: 1.4rem; display: block; }
+        .wrong-text { color: var(--danger); font-size: 0.9rem; display: block; margin-top: 5px; font-weight: normal; }
     </style>
 </head>
 <body>
@@ -64,7 +64,7 @@
         <div class="card" id="learn-card"></div>
         <div class="btn-group">
             <button class="btn-speak" onclick="handleSpeak()">🔊 Listen (聽)</button>
-            <button class="btn-practice" id="learn-rec-btn" onclick="handlePractice()">🎤 Practice (點擊開始練習)</button>
+            <button class="btn-practice" onclick="handlePractice()">🎤 Practice (練習)</button>
             <div id="learn-feedback" class="feedback"></div>
             <button class="btn-next" onclick="nextLearnWord()">Next 單字 →</button>
         </div>
@@ -75,7 +75,7 @@
         <div style="font-weight:bold; margin-bottom:5px;">Score: <span id="current-score">0</span></div>
         <div id="timer" style="color:red; font-weight:bold; font-size:1.2rem;">Time Left: <span id="seconds">60</span>s</div>
         <div class="card">
-            <div id="game-word" class="word" style="font-size: 2.5rem;">READY?</div>
+            <div id="game-word" class="word">READY?</div>
             <div id="game-feedback" class="feedback"></div>
         </div>
         <button id="start-btn" onclick="startGame()" style="background: var(--success); color: white; width: 100%;">START CHALLENGE</button>
@@ -105,7 +105,7 @@
             { word: "tunnel", pos: "n.[C]", def_ch: "隧道, 地道" },
             { word: "drip", pos: "vi. / n.[C]", def_ch: "滴下 / 水滴" },
             { word: "propose", pos: "vt.", def_ch: "提議, 建議" },
-            { word: "proposal", n: "n.[C]", def_ch: "提案, 計畫" },
+            { word: "proposal", pos: "n.[C]", def_ch: "提案, 計畫" },
             { word: "mile", pos: "n.[C]", def_ch: "英里" },
             { word: "construction", pos: "n.[U]", def_ch: "建設, 建造" },
             { word: "construct", pos: "vt.", def_ch: "建造, 構築" },
@@ -152,11 +152,9 @@
                 const text = result.transcript.toLowerCase();
                 const target = vocabulary[currentIdx].word.toLowerCase();
                 const score = Math.round(result.confidence * 100);
-
                 if(text.includes(target)) {
                     fb.innerHTML = `Great job! <span class="score-val">${score}分</span>`;
                     fb.style.color = "var(--success)";
-                    confetti({ particleCount: 50, spread: 40, origin: { y: 0.8 } });
                 } else {
                     fb.innerHTML = `Try again! <span class="score-val">${score}分</span><span class="wrong-text">你說的是: "${text}"</span>`;
                     fb.style.color = "var(--danger)";
@@ -170,7 +168,7 @@
             gameScore = 0; timeLeft = 60; gameActive = true;
             document.getElementById('current-score').innerText = gameScore;
             document.getElementById('start-btn').style.display = 'none';
-            document.getElementById('game-feedback').innerText = "Speak the word!";
+            document.getElementById('game-feedback').innerHTML = "Speak the word!";
             const timer = setInterval(() => {
                 timeLeft--; document.getElementById('seconds').innerText = timeLeft;
                 if(timeLeft <= 0 || !gameActive) { clearInterval(timer); if(timeLeft<=0) endG(); }
@@ -181,28 +179,29 @@
             if(!gameActive) return;
             gWord = vocabulary[Math.floor(Math.random()*vocabulary.length)].word;
             document.getElementById('game-word').innerText = gWord;
+            document.getElementById('game-feedback').innerHTML = "Listening... 🎤";
+            document.getElementById('game-feedback').style.color = "var(--primary)";
             rec.start();
             rec.onresult = (e) => {
                 const text = e.results[0][0].transcript.toLowerCase();
+                const gf = document.getElementById('game-feedback');
                 if(text.includes(gWord.toLowerCase())) {
                     gameScore += 10;
                     document.getElementById('current-score').innerText = gameScore;
-                    document.getElementById('game-feedback').innerText = "Correct! ✨";
-                    document.getElementById('game-feedback').style.color = "var(--success)";
-                    confetti({ particleCount: 30, spread: 50, origin: { y: 0.7 } });
-                    setTimeout(() => { if(gameActive) nextG(); }, 500);
+                    gf.innerHTML = "Correct! ✨"; gf.style.color = "var(--success)";
+                    setTimeout(() => { if(gameActive) { gf.innerHTML = ""; nextG(); } }, 500);
                 } else {
-                    document.getElementById('game-feedback').innerText = `Keep trying! (You said: ${text})`;
-                    document.getElementById('game-feedback').style.color = "var(--danger)";
-                    setTimeout(() => { if(gameActive) rec.start(); }, 400);
+                    gf.innerHTML = `Try Again!<br><span class="wrong-text">你說的是: "${text}"</span>`;
+                    gf.style.color = "var(--danger)";
+                    setTimeout(() => { if(gameActive) rec.start(); }, 800);
                 }
             };
-            rec.onend = () => { if(gameActive && document.getElementById('game-feedback').innerText === "Speak the word!") rec.start(); };
         }
         function endG() {
             gameActive = false; document.getElementById('start-btn').style.display = 'block';
             document.getElementById('game-word').innerText = "FINISH!";
-            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+            document.getElementById('game-feedback').innerHTML = `Final Score: ${gameScore}`;
+            confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 } });
             alert(`時間到！最終得分：${gameScore}`);
         }
 
